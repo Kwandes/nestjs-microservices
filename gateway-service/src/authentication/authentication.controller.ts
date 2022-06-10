@@ -1,20 +1,27 @@
-import { Controller, Post } from '@nestjs/common';
+import { Controller, Get, Inject, Post } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
+import { ServiceInfo } from 'src/service-info.constant';
 
 @Controller('auth')
 export class AuthenticationController {
+  constructor(
+    @Inject(ServiceInfo.authService.name)
+    private authServiceClient: ClientProxy,
+  ) {}
+
   @Post('login')
-  async login(): Promise<{ accessToken: string }> {
-    return {
-      accessToken:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZSI6ImlzIG5ldmVyIGdvbm5hIGdpdmUgeW91IHVwIn0.MAYF4ohuyugFRQR60VOCIoPt_BYpdyAUaSUrZMQzfc8',
-    };
+  login(): Observable<{ accessToken: string }> {
+    return this.authServiceClient.send('auth_login', {});
   }
 
   @Post('signup')
-  async signup(): Promise<{ accessToken: string }> {
-    return {
-      accessToken:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZSI6ImlzIG5ldmVyIGdvbm5hIGdpdmUgeW91IHVwIn0.MAYF4ohuyugFRQR60VOCIoPt_BYpdyAUaSUrZMQzfc8',
-    };
+  signup(): Observable<{ accessToken: string }> {
+    return this.authServiceClient.send('auth_signup', {});
+  }
+
+  @Get('error')
+  errorExample(): Observable<void> {
+    return this.authServiceClient.send('auth_error_example', {});
   }
 }
