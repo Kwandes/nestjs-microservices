@@ -1,8 +1,9 @@
-import { Controller, Get, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { catchError, Observable } from 'rxjs';
 import { rethrowRpcException } from 'src/filters/re-throw-rpc-exception';
 import { ServiceInfo } from 'src/service-info.constant';
+import { LoginDto, SignupDto } from './auth.dto';
 
 @Controller('auth')
 export class AuthenticationController {
@@ -12,16 +13,16 @@ export class AuthenticationController {
   ) {}
 
   @Post('login')
-  login(): Observable<{ accessToken: string }> {
+  login(@Body() request: LoginDto): Observable<{ accessToken: string }> {
     return this.authServiceClient
-      .send('auth_login', {})
+      .send('auth_login', request)
       .pipe(catchError((e) => rethrowRpcException(e)));
   }
 
   @Post('signup')
-  signup(): Observable<{ accessToken: string }> {
+  signup(@Body() request: SignupDto): Observable<{ accessToken: string }> {
     return this.authServiceClient
-      .send('auth_signup', {})
+      .send('auth_signup', request)
       .pipe(catchError((e) => rethrowRpcException(e)));
   }
 

@@ -1,10 +1,17 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Logger } from '@nestjs/common';
 import { MessagePattern, RpcException } from '@nestjs/microservices';
 
 @Controller()
 export class AppController {
   @MessagePattern('auth_login')
-  async login(): Promise<{ accessToken: string }> {
+  async login(request: {
+    username: string;
+    password: string;
+  }): Promise<{ accessToken: string }> {
+    Logger.debug(
+      `Logging in as ${request.username} with password ${request.password}`,
+    );
+
     return {
       accessToken:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZSI6ImlzIG5ldmVyIGdvbm5hIGdpdmUgeW91IHVwIn0.MAYF4ohuyugFRQR60VOCIoPt_BYpdyAUaSUrZMQzfc8',
@@ -12,7 +19,13 @@ export class AppController {
   }
 
   @MessagePattern('auth_signup')
-  async signup(): Promise<{ accessToken: string }> {
+  async signup(request: {
+    username: string;
+    password: string;
+  }): Promise<{ accessToken: string }> {
+    Logger.debug(
+      `Signing up as ${request.username} with password ${request.password}`,
+    );
     return {
       accessToken:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZSI6ImlzIG5ldmVyIGdvbm5hIGdpdmUgeW91IHVwIn0.MAYF4ohuyugFRQR60VOCIoPt_BYpdyAUaSUrZMQzfc8',
