@@ -1,8 +1,18 @@
-import { Controller, Logger } from '@nestjs/common';
-import { MessagePattern, RpcException } from '@nestjs/microservices';
+import { Controller, Inject, Logger } from '@nestjs/common';
+import {
+  ClientProxy,
+  MessagePattern,
+  RpcException,
+} from '@nestjs/microservices';
+import { configService } from './config.service';
 
 @Controller()
 export class AppController {
+  constructor(
+    @Inject(configService.getServiceConfigs().emailService.name)
+    private emailServiceClient: ClientProxy,
+  ) {}
+
   @MessagePattern('auth_login')
   async login(request: {
     username: string;
@@ -26,6 +36,9 @@ export class AppController {
     Logger.debug(
       `Signing up as ${request.username} with password ${request.password}`,
     );
+    // Emit an event for user created
+    this.emailServiceClient.emit('user_created', { email: request.username });
+    // Return a supposed access token to mimic authenticaiton being implemnented
     return {
       accessToken:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZSI6ImlzIG5ldmVyIGdvbm5hIGdpdmUgeW91IHVwIn0.MAYF4ohuyugFRQR60VOCIoPt_BYpdyAUaSUrZMQzfc8',

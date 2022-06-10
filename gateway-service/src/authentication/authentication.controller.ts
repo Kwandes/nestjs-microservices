@@ -1,14 +1,14 @@
 import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { catchError, Observable } from 'rxjs';
+import { configService } from 'src/config.service';
 import { rethrowRpcException } from 'src/filters/re-throw-rpc-exception';
-import { ServiceInfo } from 'src/service-info.constant';
 import { LoginDto, SignupDto } from './auth.dto';
 
 @Controller('auth')
 export class AuthenticationController {
   constructor(
-    @Inject(ServiceInfo.authService.name)
+    @Inject(configService.getServiceConfigs().authService.name)
     private authServiceClient: ClientProxy,
   ) {}
 

@@ -5,7 +5,7 @@ import { AppModule } from './app.module';
 import { configService } from './config.service';
 
 async function bootstrap() {
-  const config = configService.getServiceConfigs().authService;
+  const config = configService.getServiceConfigs().emailService;
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
@@ -18,7 +18,7 @@ async function bootstrap() {
   );
   await app.listen();
   Logger.log(
-    `Auth Service started on ${config.options.host}:${config.options.port} `,
+    `Email Service started on ${config.options.host}:${config.options.port} `,
   );
 }
 bootstrap();
