@@ -10,10 +10,14 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
+  private logger = new Logger('EMAIL');
+
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const pattern = context.switchToRpc().getContext<TcpContext>().getPattern();
     const data = context.switchToRpc().getData();
-    Logger.verbose(`Received '${pattern}' with data: ${JSON.stringify(data)}`);
+    this.logger.verbose(
+      `Received '${pattern}' with data: ${JSON.stringify(data)}`,
+    );
     return next.handle();
   }
 }

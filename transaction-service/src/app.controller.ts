@@ -15,6 +15,8 @@ import { transactions } from './transaction-data/transactions.constant';
 
 @Controller()
 export class AppController {
+  private logger = new Logger('TRANSACTION');
+
   constructor(
     @Inject(configService.getServiceConfigs().authService.name)
     private authServiceClient: ClientProxy,
@@ -84,7 +86,7 @@ export class AppController {
       chargerId: request.chargerId,
       userId: authResponse.id,
     };
-    Logger.debug(`New transaction ${JSON.stringify(newTransaction)}`);
+    this.logger.debug(`New transaction ${JSON.stringify(newTransaction)}`);
 
     this.tranactions.push(newTransaction);
     return newTransaction;
@@ -136,7 +138,7 @@ export class AppController {
         message: `Transaction with id ${request.id} was not found.`,
       });
     }
-    Logger.debug(`Transaction ${JSON.stringify(found)} stopped`);
+    this.logger.debug(`Transaction ${JSON.stringify(found)} stopped`);
     return found;
   }
 
