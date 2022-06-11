@@ -1,0 +1,30 @@
+{
+  "name": "nestjs-microservices",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "install": "(npm run install:gateway) && (npm run install:auth) && (npm run install:charger)&& (npm run install:transaction)&& (npm run install:email)",
+    "install:gateway": "cd gateway-service && npm install",
+    "install:auth": "cd auth-service && npm install",
+    "install:charger": "cd charger-service && npm install",
+    "install:transaction": "cd transaction-service && npm install",
+    "install:email": "cd email-service && npm install",
+    "serve": "concurrently \" npm run serve:auth\" \"npm run serve:gateway\" \"npm run serve:charger\" \"npm run serve:transaction\" \"npm run serve:email\"",
+    "serve:gateway": "cd gateway-service && npm run start:dev",
+    "serve:auth": "cd auth-service && npm run start:dev",
+    "serve:charger": "cd charger-service && npm run start:dev",
+    "serve:transaction": "cd transaction-service && npm run start:dev",
+    "serve:email": "cd email-service && npm run start:dev"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^8.0.0",
+    "concurrently": "^7.2.1"
+  },
+  "dependencies": {
+    "@nestjs/microservices": "^8.4.6",
+    "dotenv": "^16.0.1"
+  }
+}

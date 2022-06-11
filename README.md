@@ -95,7 +95,65 @@ Handling events:
   transactionUpdatedHandler(data: Record<string, unknown>): void {}
 ```
 
-## Database
+## Project setup and installation
+
+### Prerequisites
+
+Before you can run this project, you need to have the following things installed:
+
+- Npm and Node - we recommend using [NVM (Linux, MacOS)](https://github.com/nvm-sh/nvm#about) or [NVM-Windows (Windows)](https://github.com/coreybutler/nvm-windows#node-version-manager-nvm-for-windows)
+
+  > Use Node version `v16.14.0+`
+
+### Installation
+
+1. Clone the repo
+
+```sh
+git clone https://github.com/Kwandes/teststore.git
+```
+
+2. Install NPM packages
+
+Since each service is its own nestjs application, there are multiple `package.json` files that have to be installed.
+You can install all applications at once with
+
+```sh
+npm run install
+```
+
+3. Configure the app
+
+Update the `.env` file if needed.
+
+The app requires a PostgreSql database instance to connect to.
+
+More information available in [Database section](#database)
+
+5. Serve the apps
+
+The system is composed of multiple apps which complicates running them. They also depend on each other, so it is best to run all of them. At minimum, the gateway service has to be run.
+
+You can run all of the services at once with
+
+```sh
+npm run serve
+```
+
+Or run each app invidually with
+
+```ts
+npm run serve:gateway
+npm run serve:auth
+npm run serve:charger
+npm run serve:transaction
+npm run serve:email
+```
+
+> Each applciation has to be run in a seperate terminal
+> The applications will re-build automatically on code changes
+
+### Database
 
 This project uses PostgreSQL for data persistance. Due to usage of TypeORM it can be easily swapped to another SQL database.
 
@@ -104,7 +162,8 @@ The [`.env.template`](./.env.template) file contains default database connection
 The project requires a Postgres database with the following schemas:
 
 - `authentication` - used by AuthService
-- `ocpp` - used by ChargerService
+- `charger` - used by ChargerService
+- `transaction` - used by TransactionService
 
 To run a database locally via Docker you can use the following command:
 
