@@ -6,6 +6,8 @@ import { configService } from './config.service';
 @Module({
   controllers: [AppController],
   imports: [
+    ClientsModule.register([configService.getServiceConfigs().authService]),
+    ClientsModule.register([configService.getServiceConfigs().chargerService]),
     ClientsModule.register([
       configService.getServiceConfigs().transactionService,
     ]),

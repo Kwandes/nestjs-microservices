@@ -13,14 +13,18 @@ export class AuthenticationController {
   ) {}
 
   @Post('login')
-  login(@Body() request: LoginDto): Observable<{ accessToken: string }> {
+  login(
+    @Body() request: LoginDto,
+  ): Observable<{ id: string; username: string; accessToken: string }> {
     return this.authServiceClient
-      .send('auth_login', request)
+      .send('auth_authenticate', request)
       .pipe(catchError((e) => rethrowRpcException(e)));
   }
 
   @Post('signup')
-  signup(@Body() request: SignupDto): Observable<{ accessToken: string }> {
+  signup(
+    @Body() request: SignupDto,
+  ): Observable<{ id: string; username: string; accessToken: string }> {
     return this.authServiceClient
       .send('auth_signup', request)
       .pipe(catchError((e) => rethrowRpcException(e)));

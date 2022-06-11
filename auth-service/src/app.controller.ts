@@ -13,12 +13,14 @@ export class AppController {
     private emailServiceClient: ClientProxy,
   ) {}
 
-  @MessagePattern('auth_login')
+  @MessagePattern('auth_authenticate')
   async login(request: {
     username: string;
     password: string;
-  }): Promise<{ accessToken: string }> {
+  }): Promise<{ id: string; username: string; accessToken: string }> {
     return {
+      id: '1',
+      username: request.username,
       accessToken:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZSI6ImlzIG5ldmVyIGdvbm5hIGdpdmUgeW91IHVwIn0.MAYF4ohuyugFRQR60VOCIoPt_BYpdyAUaSUrZMQzfc8',
     };
@@ -28,11 +30,16 @@ export class AppController {
   async signup(request: {
     username: string;
     password: string;
-  }): Promise<{ accessToken: string }> {
+  }): Promise<{ id: string; username: string; accessToken: string }> {
     // Emit an event for user created
-    this.emailServiceClient.emit('user_created', { email: request.username });
+    this.emailServiceClient.emit('user_created', {
+      id: '1',
+      username: request.username,
+    });
     // Return a supposed access token to mimic authenticaiton being implemnented
     return {
+      id: '1',
+      username: request.username,
       accessToken:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZSI6ImlzIG5ldmVyIGdvbm5hIGdpdmUgeW91IHVwIn0.MAYF4ohuyugFRQR60VOCIoPt_BYpdyAUaSUrZMQzfc8',
     };

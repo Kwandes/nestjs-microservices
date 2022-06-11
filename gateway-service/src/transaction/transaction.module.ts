@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule } from '@nestjs/microservices';
-import { AppController } from './app.controller';
-import { configService } from './config.service';
+import { configService } from 'src/config.service';
+import { TransactionController } from './transaction.controller';
 
 @Module({
-  controllers: [AppController],
+  controllers: [TransactionController],
   imports: [
     ClientsModule.register([
       configService.getServiceConfigs().transactionService,
     ]),
   ],
 })
-export class AppModule {}
+export class TransactionModule {}
