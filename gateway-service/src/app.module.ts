@@ -2,12 +2,12 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthenticationModule } from './authentication/authentication.module';
+import { ChargerModule } from './charger/charger.module';
 import { EmailModule } from './email/email.module';
 import { LoggerMiddleware } from './middleware/logging.middleware';
-import { OcppModule } from './ocpp/ocpp.module';
 
 @Module({
-  imports: [AuthenticationModule, OcppModule, EmailModule],
+  imports: [AuthenticationModule, ChargerModule, EmailModule],
   controllers: [AppController],
   providers: [AppService],
 })
