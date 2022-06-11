@@ -1,4 +1,4 @@
-import { Controller, Inject, Logger } from '@nestjs/common';
+import { Controller, Inject } from '@nestjs/common';
 import {
   ClientProxy,
   MessagePattern,
@@ -18,10 +18,6 @@ export class AppController {
     username: string;
     password: string;
   }): Promise<{ accessToken: string }> {
-    Logger.debug(
-      `Logging in as ${request.username} with password ${request.password}`,
-    );
-
     return {
       accessToken:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZSI6ImlzIG5ldmVyIGdvbm5hIGdpdmUgeW91IHVwIn0.MAYF4ohuyugFRQR60VOCIoPt_BYpdyAUaSUrZMQzfc8',
@@ -33,9 +29,6 @@ export class AppController {
     username: string;
     password: string;
   }): Promise<{ accessToken: string }> {
-    Logger.debug(
-      `Signing up as ${request.username} with password ${request.password}`,
-    );
     // Emit an event for user created
     this.emailServiceClient.emit('user_created', { email: request.username });
     // Return a supposed access token to mimic authenticaiton being implemnented

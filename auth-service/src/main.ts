@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
 import { configService } from './config.service';
+import { LoggingInterceptor } from './interceptors/logging.interceptor';
 
 async function bootstrap() {
   const config = configService.getServiceConfigs().authService;
@@ -16,6 +17,7 @@ async function bootstrap() {
       },
     },
   );
+  app.useGlobalInterceptors(new LoggingInterceptor()); // Log the incoming requests
   await app.listen();
   Logger.log(
     `Auth Service started on ${config.options.host}:${config.options.port} `,
