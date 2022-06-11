@@ -9,8 +9,11 @@ Due to my current work with Electric vehicle charger, some of the services may c
 
 ## System design
 
-_Made using whimsical_
-![image](https://user-images.githubusercontent.com/22862227/173121288-778ff7b2-420f-4ebe-bd1f-6716fc5688fb.png)
+### System architecture
+
+[View in Whimsical](https://whimsical.com/nestjs-microservices-system-structure-NrFnsKBHSdFjstmWbRq2iJ)
+
+![image](https://user-images.githubusercontent.com/22862227/173170226-ec6e347f-9259-4cfc-8f73-842574d8c62f.png)
 
 ### Gateway Service
 
@@ -19,7 +22,8 @@ The main implementation will be done using the [api-gateway pattern](https://mic
 In this project, the gateway will be another NestJs app that will redirect requests based on the request URI ([Gateway routing pattern](https://docs.microsoft.com/en-us/azure/architecture/patterns/gateway-routing)).
 
 - `/auth/*` - Auth Service
-- `/ocpp/*` - Charger Service
+- `/charger/*` - Charger Service
+- `/transaction/*` - Transaction Service
 - `/email/*` - Email Service
 
 ### Microservices
@@ -38,7 +42,15 @@ Since the gateway service is responsible for all external communication with the
 
 #### ChargerService
 
-Charger service is a microservice responsible for getting and manipulating charger data as well as tarnsactions, aka charge sessions.
+Charger service is a microservice responsible for getting and manipulating charger data.
+
+The service will have database connection using TypeOrm to a schema called "ocpp" where the charger data will be stored.
+
+#### ChargerService
+
+Charger service is a microservice responsible for getting and manipulating transactions, aka charge sessions.
+
+This is the most robust example of communication between microservices as it has to authenticate start transaction requests, fetch chargers to ensure the chargeId is valid, and handle events for `charger_updated`.
 
 The service will have database connection using TypeOrm to a schema called "ocpp" where the charger data will be stored.
 
@@ -47,6 +59,41 @@ The service will have database connection using TypeOrm to a schema called "ocpp
 Email Service is a microservice responsible for email-based communication. Emails would be sent on events like user signup. To reduce complexity, the email sending will not actually be implemented and fake data will be used.
 
 The purpose of this service is to test message queues and event based communication between microservices.
+
+### Event Bus
+
+[View in Whimsical](https://whimsical.com/nestjs-microservices-system-structure-NrFnsKBHSdFjstmWbRq2iJ)
+
+![image](https://user-images.githubusercontent.com/22862227/173170249-0a46c3b5-81a4-43a4-90af-8d5ca9a3c28e.png)
+
+The Event bus is currently implemneted using TCP transport layer.
+Not all serve actions emit events.\
+Green dotted lines represent events that were not implemented since there is nothing listening to them.
+
+#### Events
+
+- `user_created` - triggers sending of a signup email in **EmailService**
+- `charger_updated` - if status is `unavailable` then all transactions on that charger are stopped
+- `transaction_started` - unhandled
+- `transaction_updated` - if status is `inactive` then the transaction is stopped
+- `transaction_stopped` - unhandled
+
+Emitting events:
+
+```ts
+this.transactionServiceClient.emit("transaction_updated", {
+  id: found.id,
+  status: found.status,
+  value: found.value,
+});
+```
+
+Handling events:
+
+```ts
+  @EventPattern('transaction_updated')
+  transactionUpdatedHandler(data: Record<string, unknown>): void {}
+```
 
 ## Database
 
@@ -68,3 +115,9 @@ docker run --name postgres -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -e PO
 You will need to connect to the database image and manually create a `ocpp` database within it.
 
 After that the services should be abile to automatically connect to it with the default database information.
+
+> Currently instead of implementing the database, the data is stored as a variables within the services. It gets reset every time you rerun/rebuild the service.
+
+## License
+
+Distributed under the MIT License. See [`LICENSE`](./LICENSE) for more information.
