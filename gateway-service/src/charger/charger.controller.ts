@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Inject, Patch } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { catchError, Observable } from 'rxjs';
-import { configService } from 'src/config.service';
-import { rethrowRpcException } from 'src/filters/re-throw-rpc-exception';
+import { configService } from '../config.service';
+import { rethrowRpcException } from '../filters/re-throw-rpc-exception';
 import { UpdateChargerDto } from './charger.dto';
 import { ICharger } from './charger.interface';
 
