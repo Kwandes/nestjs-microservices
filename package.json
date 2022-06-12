@@ -6,20 +6,21 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "install": "(npm run install:gateway) && (npm run install:auth) && (npm run install:charger)&& (npm run install:transaction)&& (npm run install:email)",
+    "install": "(npm run install:gateway) && (npm run install:auth) && (npm run install:charger) && (npm run install:transaction) && (npm run install:email)",
     "install:gateway": "cd gateway-service && npm install",
     "install:auth": "cd auth-service && npm install",
     "install:charger": "cd charger-service && npm install",
     "install:transaction": "cd transaction-service && npm install",
     "install:email": "cd email-service && npm install",
-    "serve": "concurrently \" npm run serve:auth\" \"npm run serve:gateway\" \"npm run serve:charger\" \"npm run serve:transaction\" \"npm run serve:email\"",
+    "serve": "concurrently 'npm:serve:auth' 'npm:serve:gateway' 'npm:serve:charger' 'npm:serve:transaction' 'npm:serve:email'",
     "serve:gateway": "cd gateway-service && npm run start:dev",
     "serve:auth": "cd auth-service && npm run start:dev",
     "serve:charger": "cd charger-service && npm run start:dev",
     "serve:transaction": "cd transaction-service && npm run start:dev",
     "serve:email": "cd email-service && npm run start:dev",
     "test:e2e": "cd gateway-service && npm run test:e2e",
-    "test:e2e:watch": "cd gateway-service && npm run test:e2e:watch"
+    "test:e2e:watch": "cd gateway-service && npm run test:e2e:watch",
+    "test:e2e:ci": "concurrently  --kill-others --success first '(ping -c 30 127.0.0.1) && (npm run test:e2e)' 'npm:serve:auth' 'npm:serve:gateway' 'npm:serve:charger' 'npm:serve:transaction' 'npm:serve:email'"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",
