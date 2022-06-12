@@ -177,6 +177,21 @@ After that the services should be abile to automatically connect to it with the 
 
 > Currently instead of implementing the database, the data is stored as a variables within the services. It gets reset every time you rerun/rebuild the service.
 
+## Testing
+
+This project includes End-to-End tests written using Supertest and Jest. Their purpose is to demonstrate how to test this specific microservice architecture implemention.
+
+Due to how project setup, the microservices actually became external dependencies of each other, and can't be setup and run from within a service, which is the same for how databases etc would behave in a E2E test that doesn't mock them.
+
+Because of this in roder to run the E2E tests you need to first serve all of the relevant microservices in another terminal window/container.
+
+```sh
+shell1$ npm run serve
+shell2$ npm run test:e2e
+```
+
+While developing the tests you might want to re-run the tests after each change. This can be done automatically by running the tests with `npm run test:e2e:watch`, which will reload the tests after each code change.
+
 ## License
 
 Distributed under the MIT License. See [`LICENSE`](./LICENSE) for more information.

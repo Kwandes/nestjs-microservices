@@ -18,8 +18,8 @@
     "serve:charger": "cd charger-service && npm run start:dev",
     "serve:transaction": "cd transaction-service && npm run start:dev",
     "serve:email": "cd email-service && npm run start:dev",
-    "test": "cd gateway-service && npm run test:e2e",
-    "test:watch": "cd gateway-service && npm run test:e2e:watch"
+    "test:e2e": "cd gateway-service && npm run test:e2e",
+    "test:e2e:watch": "cd gateway-service && npm run test:e2e:watch"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",
